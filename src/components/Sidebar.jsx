@@ -41,13 +41,14 @@ export default function Sidebar() {
       <DraggableBlock block={{ id: 'MOVE', label: 'Move 10 steps', values: [10] }} />
       <DraggableBlock block={{ id: 'TURN_RIGHT', label: 'Turn ↻ 15 degrees', values: [15] }} />
       <DraggableBlock block={{ id: 'GOTO_XY', label: 'Go to x: __ y: __', values: [0, 0] }} />
+      <DraggableBlock block={{ id: 'REPEAT', label: 'Repeat __ times', values: [10] }} />
 
       <div className="font-bold mt-6 mb-4">Looks</div>
       <DraggableBlock block={{ id: 'SAY_FOR_SECS', label: 'Say __ for __ secs', values: ['Hello!', 2] }} />
       <DraggableBlock block={{ id: 'THINK_FOR_SECS', label: 'Think __ for __ secs', values: ['Hmm...', 2] }} />
       
       <div className="font-bold mt-6 mb-4">Controls</div>
-      <DraggableBlock block={{ id: 'REPEAT', label: 'Repeat __ times', values: [10] }} />
+      
     </div>
   );
 }

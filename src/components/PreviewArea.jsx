@@ -37,7 +37,7 @@ export default function PreviewArea() {
       {/* The Stage */}
       <div className="w-full h-3/5 bg-white border border-gray-300 relative">
         {Object.entries(sprites).map(([id, sprite]) => (
-          <CatSprite key={id} sprite={sprite} />
+          <CatSprite key={id} id={id}sprite={sprite} />
         ))}
       </div>
 

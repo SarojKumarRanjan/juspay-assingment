@@ -1,27 +1,66 @@
-import React from 'react';
+import React, { useContext, useState, useEffect } from 'react';
+import { SpriteContext } from '../contexts/SpriteContext';
 
-export default function CatSprite({ sprite }) {
-  const { x, y, direction, costume, message, isThinking } = sprite;
+export default function CatSprite({ sprite, id }) {
+  const { setSprites } = useContext(SpriteContext);
+  const [dragging, setDragging] = useState(false);
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
 
-  const bubbleClasses = "absolute -top-8 left-1/2 -translate-x-1/2 bg-white border border-gray-400 rounded-lg px-2 py-1 text-sm";
-  
+  const handleMouseDown = (e) => {
+    e.preventDefault(); // Prevent ghost drag outline
+    setDragging(true);
+    setOffset({
+      x: e.clientX - sprite.x,
+      y: e.clientY - sprite.y,
+    });
+  };
+
+  const handleMouseMove = (e) => {
+    if (!dragging) return;
+    const newX = e.clientX - offset.x;
+    const newY = e.clientY - offset.y;
+    setSprites(prev => ({
+      ...prev,
+      [id]: {
+        ...prev[id],
+        x: newX,
+        y: newY,
+      },
+    }));
+  };
+
+  const handleMouseUp = () => {
+    setDragging(false);
+  };
+
+  useEffect(() => {
+    if (dragging) {
+      window.addEventListener('mousemove', handleMouseMove);
+      window.addEventListener('mouseup', handleMouseUp);
+    } else {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    }
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, [dragging]);
+
   return (
-    <div
-      className="absolute"
+    <img
+      src={sprite.costume}
+      alt={sprite.name}
+      draggable={false} // Prevent ghost image
+      onMouseDown={handleMouseDown}
       style={{
-        left: `${x}px`,
-        top: `${y}px`,
-        transform: `rotate(${direction - 90}deg)`, // Adjusting so 90deg is right
+        position: 'absolute',
+        left: sprite.x,
+        top: sprite.y,
+        cursor: 'grab',
+        width: 80,
+        height: 80,
       }}
-    >
-      {message && (
-        <div className={bubbleClasses}>
-          {message}
-          {/* Add a small tail for the bubble */}
-          <div className={`absolute bottom-[-5px] left-1/2 -translate-x-1/2 w-0 h-0 border-l-8 border-r-8 ${isThinking ? "" : "border-t-8 border-t-white"}`}></div>
-        </div>
-      )}
-      <img src={costume} alt="sprite" className="w-20 h-20" />
-    </div>
+    />
   );
 }
